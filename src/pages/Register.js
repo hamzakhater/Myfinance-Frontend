@@ -1,46 +1,55 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../services/api";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    console.log("Name:", name, "Email:", email, "Password:", password);
-    // لاحقًا نربطه مع API الباك إند لإنشاء حساب
-    navigate("/"); // بعد التسجيل نرجع للصفحة الرئيسية (Login)
+
+    try {
+      // إرسال البيانات للباك
+      const response = await axiosInstance.post("/Authentication/signup", {
+        username,
+        password,
+      });
+
+      if (response.data.status?.status) {
+        alert("Registration successful! You can now login.");
+        navigate("/"); // بعد التسجيل نرجع للصفحة الرئيسية (Login)
+      } else {
+        setError(response.data.status?.message || "Registration failed.");
+      }
+    } catch (err) {
+      console.error("Register error:", err);
+      setError(err.response?.data?.status?.message || "Registration failed.");
+    }
   };
 
   return (
     <div className="d-flex vh-100 justify-content-center align-items-center bg-light">
       <div className="card p-4 shadow-lg" style={{ width: "350px" }}>
         <h3 className="text-center mb-3">Register</h3>
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label>Name</label>
+            <label>Username</label>
             <input
               type="text"
               className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label>Email</label>
-            <input
-              type="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
