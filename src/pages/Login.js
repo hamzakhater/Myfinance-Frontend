@@ -13,24 +13,29 @@ const Login = () => {
     setError("");
 
     try {
-      // إرسال البيانات للباك
       const response = await axiosInstance.post("/Authentication/login", {
         username,
         password,
       });
 
+      // نحاول نجيب التوكن من أكثر من احتمال
+      const token =
+        response.data?.data?.token ||
+        response.data?.token ||
+        response.data?.accessToken;
+
       if (response.data.data) {
-        // تخزين الـ JWT Token في localStorage
+        // تخزين الـ JWT token مباشرة
         localStorage.setItem("token", response.data.data);
 
-        // تسجيل الدخول ناجح، التوجيه للـ Dashboard
+        // التوجيه للداشبورد
         navigate("/dashboard");
       } else {
-        setError(response.data.status?.message || "Login failed.");
+        setError(response.data.status?.message || "Login failed");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.response?.data?.status?.message || "Login failed.");
+      setError(err.response?.data?.message || "Login failed. Try again.");
     }
   };
 
