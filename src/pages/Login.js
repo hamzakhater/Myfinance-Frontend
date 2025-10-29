@@ -1,136 +1,100 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import axiosInstance from "../services/api";
-
-// const Login = () => {
-//   const navigate = useNavigate();
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState("");
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError("");
-
-//     try {
-//       const response = await axiosInstance.post("/Authentication/login", {
-//         username,
-//         password,
-//       });
-
-//       if (response.data.status?.status) {
-//         // تخزين التوكن في localStorage
-//         localStorage.setItem("token", response.data.data.token);
-
-//         // التوجيه للداشبورد
-//         navigate("/dashboard");
-//       } else {
-//         setError(response.data.status?.message || "Login failed");
-//       }
-//     } catch (err) {
-//       console.error("Login error:", err);
-//       setError(
-//         err.response?.data?.status?.message || "Login failed. Try again."
-//       );
-//     }
-//   };
-
-//   return (
-//     <div className="login-container">
-//       <h2>Login</h2>
-//       {error && <p style={{ color: "red" }}>{error}</p>}
-//       <form onSubmit={handleSubmit}>
-//         <div>
-//           <label>Username:</label>
-//           <input
-//             type="text"
-//             value={username}
-//             onChange={(e) => setUsername(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <div>
-//           <label>Password:</label>
-//           <input
-//             type="password"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <button type="submit">Login</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import React, { useState } from "react";
-import axiosInstance from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/api"; // دالة API الخاصة بتسجيل الدخول
+import { Spinner } from "react-bootstrap";
 
-export default function Login() {
+export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
-      const res = await axiosInstance.post("/Authentication/login", {
-        email,
-        password,
-      });
+      const res = await loginUser({ email, password });
 
-      if (res.data.status.status) {
-        // تخزين بيانات المستخدم في localStorage
-        localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        localStorage.setItem("token", res.data.data.token);
-
-        // الانتقال إلى Dashboard بعد تسجيل الدخول
+      if (res.status) {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       } else {
-        setError(res.data.status.message);
+        setError(res.message || "Login failed");
       }
     } catch (err) {
-      setError(err.response?.data?.status?.message || "Login failed");
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "400px" }}>
-      <h2>Login</h2>
-      {error && <p className="text-danger">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Email</label>
-          <input
-            type="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div
+        className="card shadow-lg p-4"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
+        <h2 className="text-center mb-4">Welcome Back</h2>
 
-        <div className="mb-3">
-          <label>Password</label>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+        {error && <div className="alert alert-danger">{error}</div>}
 
-        <button type="submit" className="btn btn-primary w-100">
-          Login
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label>Email</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary w-100 d-flex justify-content-center align-items-center"
+            disabled={loading}
+          >
+            {loading && (
+              <Spinner animation="border" size="sm" className="me-2" />
+            )}
+            Login
+          </button>
+        </form>
+
+        <div className="d-flex justify-content-between mt-3">
+          <span
+            style={{ color: "#0d6efd", cursor: "pointer" }}
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </span>
+
+          <span
+            style={{ color: "#0d6efd", cursor: "pointer" }}
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot Password?
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

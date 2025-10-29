@@ -1,110 +1,125 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../services/api";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signupUser } from "../services/api"; // دالة API الخاصة بالتسجيل
+import { Spinner } from "react-bootstrap";
 
-export default function Register() {
+export default function SignUpPage() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
-    // التحقق من كلمة السر والتأكيد
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
 
+    setLoading(true);
     try {
-      const response = await axiosInstance.post("/Authentication/signup", {
-        name,
-        username,
-        email,
-        password,
-      });
+      const res = await signupUser({ name, email, password });
 
-      if (response.data.status?.status) {
-        alert("Registration successful! You can now login.");
-        navigate("/"); // بعد التسجيل نرجع للصفحة الرئيسية (Login)
+      if (res.status) {
+        setSuccess("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 2000);
       } else {
-        setError(response.data.status?.message || "Registration failed");
+        setError(res.message || "Registration failed");
       }
     } catch (err) {
-      console.error("Register error:", err);
-      setError(
-        err.response?.data?.status?.message || "Registration failed. Try again."
-      );
+      setError(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="d-flex vh-100 justify-content-center align-items-center bg-light">
-      <div className="card p-4 shadow-lg" style={{ width: "400px" }}>
-        <h3 className="text-center mb-3">Register</h3>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div
+        className="card shadow-lg p-4"
+        style={{ maxWidth: "450px", width: "100%" }}
+      >
+        <h2 className="text-center mb-4">Create Account</h2>
+
+        {success && <div className="alert alert-success">{success}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label>Full Name</label>
             <input
               type="text"
               className="form-control"
+              placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
-          <div className="mb-3">
-            <label>Username</label>
-            <input
-              type="text"
-              className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
+
           <div className="mb-3">
             <label>Email</label>
             <input
               type="email"
               className="form-control"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
+
           <div className="mb-3">
             <label>Password</label>
             <input
               type="password"
               className="form-control"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
+
           <div className="mb-3">
             <label>Confirm Password</label>
             <input
               type="password"
               className="form-control"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit" className="btn btn-success w-100">
+
+          <button
+            type="submit"
+            className="btn btn-success w-100 d-flex justify-content-center align-items-center"
+            disabled={loading}
+          >
+            {loading && (
+              <Spinner animation="border" size="sm" className="me-2" />
+            )}
             Register
           </button>
         </form>
+
         <p className="mt-3 text-center">
-          Already have an account? <Link to="/">Login</Link>
+          Already have an account?{" "}
+          <span
+            style={{ color: "#0d6efd", cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
+            Login
+          </span>
         </p>
       </div>
     </div>
