@@ -6,30 +6,27 @@ import { Spinner } from "react-bootstrap";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setMessage("");
     setLoading(true);
 
     try {
-      const res = await axiosInstance.post("/Authentication/forgot-password", {
-        email,
-      });
+      const res = await axiosInstance.post("/auth/forgot-password", { email });
 
-      if (res.data.status?.status) {
-        setMessage(res.data.status.message || "Reset link sent to your email!");
+      if (res.data.status) {
+        // إعادة التوجيه مباشرة إلى صفحة Reset Password باستخدام التوكن
+        if (res.data.resetToken) {
+          navigate(`/reset-password/${res.data.resetToken}`);
+        }
       } else {
-        setError(res.data.status?.message || "Failed to send reset link.");
+        setError(res.data.message || "Failed to generate reset token.");
       }
     } catch (err) {
-      setError(
-        err.response?.data?.status?.message || "Network error. Try again."
-      );
+      setError(err.response?.data?.message || "Network error. Try again.");
     } finally {
       setLoading(false);
     }
@@ -43,7 +40,6 @@ export default function ForgotPassword() {
       >
         <h2 className="text-center mb-4">Forgot Password</h2>
 
-        {message && <div className="alert alert-success">{message}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -52,7 +48,7 @@ export default function ForgotPassword() {
             <input
               type="email"
               className="form-control"
-              placeholder="Enter your registered email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

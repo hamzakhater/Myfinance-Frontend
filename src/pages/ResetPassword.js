@@ -5,7 +5,7 @@ import { Spinner } from "react-bootstrap";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
-  const { token } = useParams(); // نفترض أن الرابط يحتوي على token
+  const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,19 +24,23 @@ export default function ResetPassword() {
 
     setLoading(true);
     try {
-      const res = await axiosInstance.post("/Authentication/reset-password", {
+      const res = await axiosInstance.post("/auth/reset-password", {
         token,
         password,
       });
 
-      if (res.data.status?.status) {
-        setSuccess("Password reset successful! Redirecting to login...");
+      // التحقق من status مباشرة من response
+      if (res.data.status) {
+        setSuccess(
+          res.data.message ||
+            "Password reset successful! Redirecting to login..."
+        );
         setTimeout(() => navigate("/"), 2000); // الانتقال للـ Login بعد ثانيتين
       } else {
-        setError(res.data.status?.message || "Reset failed");
+        setError(res.data.message || "Reset failed");
       }
     } catch (err) {
-      setError(err.response?.data?.status?.message || "Network error");
+      setError(err.response?.data?.message || "Network error. Try again.");
     } finally {
       setLoading(false);
     }
@@ -49,7 +53,6 @@ export default function ResetPassword() {
         style={{ maxWidth: "400px", width: "100%" }}
       >
         <h2 className="text-center mb-4">Reset Password</h2>
-
         {success && <div className="alert alert-success">{success}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 

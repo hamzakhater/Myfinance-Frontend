@@ -1,9 +1,13 @@
+/* =========================
+   Body & Animated Background
+========================= */
 body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
     background: linear-gradient(-45deg, #f5f7fa, #c3cfe2, #89f7fe, #66a6ff);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 100vh;
+    transition: background 0.5s ease;
 }
 
 @keyframes gradientBG {
@@ -20,6 +24,9 @@ body {
     }
 }
 
+/* =========================
+   Fade-in Animation
+========================= */
 .fade-in {
     animation: fadeIn 1s ease-in-out;
 }
@@ -36,6 +43,9 @@ body {
     }
 }
 
+/* =========================
+   Cards & Dashboard
+========================= */
 .cards-container {
     display: flex;
     justify-content: space-between;
@@ -48,281 +58,87 @@ body {
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
     text-align: center;
     padding: 15px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .dashboard-card:hover {
-    transform: translateY(-10px) scale(1.03);
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
 }
 
-.actions-container button {
-    margin-left: 5px;
-    transition: transform 0.2s, box-shadow 0.2s;
+.caht-cards .card:nth-child(1) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.actions-container button:hover {
+.caht-cards .card:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.caht-cards .card:nth-child(3) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* =========================
+   Buttons
+========================= */
+.dashboard-buttons button,
+.btn {
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+}
+
+.dashboard-buttons button:hover,
+.btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
 }
 
+/* =========================
+   Tables
+========================= */
 .table thead {
     background: linear-gradient(90deg, #66a6ff, #89f7fe);
     color: white;
 }
 
+.table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
 .table tbody tr:hover {
-    background-color: rgba(102, 166, 255, 0.2);
-    transition: 0.3s;
-}
-
-.modal-custom {
-    border-radius: 15px;
-}
-
-.input-custom:focus {
-    outline: none;
-    border-color: #66a6ff;
-    box-shadow: 0 0 5px #66a6ff;
-    transition: 0.3s;
-}
-
-/* Dashboard.css */
-
-/* Dark mode body tweak */
-.caht-dark {
-    background: #0f1724;
-    color: #e6eef8;
-}
-
-/* Dashboard overall */
-.caht-dashboard {
-    transition: background 0.25s, color 0.25s;
-}
-
-/* Cards */
-.caht-cards .card {
-    transition: transform 0.25s, box-shadow 0.25s;
-}
-
-.caht-cards .card:hover {
-    transform: translateY(-6px);
-}
-
-/* CAHT Confirm Toast */
-.confirm-toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 12px 14px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-    z-index: 9999;
-    width: 300px;
-    animation: caht-fade-in 0.25s ease;
-}
-
-.caht-dark .confirm-toast {
-    background-color: #0b1220;
-    border-color: #1f2a3a;
-}
-
-/* Confirm message */
-.confirm-message {
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-/* Buttons container */
-.confirm-buttons {
-    display: flex;
-    justify-content: flex-end;
-}
-
-/* Notification bubble */
-.caht-notification {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 9999;
-    padding: 10px 14px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 220px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.caht-notification .caht-msg {
-    flex: 1;
-}
-
-.caht-notification .caht-close {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-}
-
-/* variants */
-.caht-success {
-    background: #e6ffef;
-    color: #084c29;
-    border: 1px solid rgba(40, 167, 69, 0.2);
-}
-
-.caht-danger {
-    background: #fff1f0;
-    color: #7a1b1b;
-    border: 1px solid rgba(220, 53, 69, 0.15);
-}
-
-/* animation */
-@keyframes caht-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* modal override small */
-.modal-dialog {
-    max-width: 500px;
-}
-
-/* خلفية الصفحة */
-.dashboard-container {
-    background: linear-gradient(135deg, #a8edea, #fed6e3);
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* البطاقة العلوية */
-.status-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px 25px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.status-card span {
-    font-size: 18px;
-    font-weight: 600;
-    color: #2b2b2b;
-}
-
-/* الأزرار */
-.dashboard-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.dashboard-buttons button {
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.dashboard-buttons button:hover {
-    transform: scale(1.05);
-}
-
-/* شريط التقدم */
-.progress {
-    height: 20px;
-    border-radius: 10px;
-}
-
-.progress-bar {
-    background: linear-gradient(to right, #36d1dc, #5b86e5);
-}
-
-/* العناوين */
-.section-title {
-    font-weight: bold;
-    font-size: 22px;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-
-/* =========================
-   Dashboard Global Styles
-========================= */
-body.caht-dark {
-    background-color: #121212;
-    color: #e0e0e0;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.caht-dark .card,
-body.caht-dark .modal-content {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-}
-
-body.caht-dark .btn-outline-danger {
-    color: #ff6b6b;
-    border-color: #ff6b6b;
-}
-
-.caht-dashboard {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.caht-cards .card {
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-}
-
-.caht-cards .card:hover {
-    transform: translateY(-3px);
-}
-
-.budget-section {
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-body.caht-dark .budget-section {
-    background-color: #1e1e1e;
-}
-
-.dashboard-buttons .btn {
-    min-width: 120px;
+    background-color: rgba(0, 123, 255, 0.1);
 }
 
 /* =========================
    Modals
 ========================= */
-.modal.d-block {
-    display: block;
-    background-color: rgba(0, 0, 0, 0.4);
+.modal-dialog {
+    max-width: 500px;
 }
 
 .modal-content {
     border-radius: 12px;
     padding: 15px;
+    animation: fadeInScale 0.3s ease;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* =========================
-   Inline Notification (Toast-like)
+   Toast Notifications
 ========================= */
 .caht-notification {
     position: fixed;
@@ -331,13 +147,12 @@ body.caht-dark .budget-section {
     min-width: 250px;
     padding: 15px 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: 500;
     z-index: 1050;
-    animation: fadeIn 0.5s;
+    animation: slideIn 0.4s ease;
 }
 
 .caht-notification.caht-success {
@@ -351,11 +166,24 @@ body.caht-dark .budget-section {
 }
 
 .caht-close {
-    background: none;
+    background: transparent;
     border: none;
-    color: #fff;
+    color: white;
     font-size: 18px;
     cursor: pointer;
+    margin-left: 10px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* =========================
@@ -363,20 +191,16 @@ body.caht-dark .budget-section {
 ========================= */
 .confirm-toast {
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.9);
     min-width: 320px;
     background-color: #fff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeInScale 0.3s forwards;
     z-index: 2000;
-}
-
-body.caht-dark .confirm-toast {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
 }
 
 .confirm-buttons {
@@ -385,38 +209,83 @@ body.caht-dark .confirm-toast {
     margin-top: 15px;
 }
 
-/* =========================
-   Top Expenses List
-========================= */
-.list-group-item {
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-weight: 500;
+.confirm-buttons button {
+    min-width: 80px;
+    margin-top: 10px;
+    margin-right: 5px;
 }
 
 /* =========================
-   Progress Bars
+   Dark Mode
 ========================= */
-.progress {
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
+body.caht-dark {
+    background: #0f1724;
+    color: #e6eef8;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.progress-bar {
-    font-weight: 500;
+body.caht-dark .card,
+body.caht-dark .modal-content {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+body.caht-dark .btn-outline-danger {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+body.caht-dark .budget-section {
+    background-color: #1e1e1e;
+}
+
+body.caht-dark .confirm-toast {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
 
 /* =========================
-   Animations
+   Top Status Cards Animation
 ========================= */
-@keyframes fadeIn {
-    from {
+.status-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    animation: cardFadeIn 0.8s ease forwards;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.status-card span {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2b2b2b;
+}
+
+@keyframes cardFadeIn {
+    0% {
         opacity: 0;
         transform: translateY(20px);
     }
 
-    to {
+    60% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+
+    100% {
         opacity: 1;
         transform: translateY(0);
     }
